@@ -1,0 +1,74 @@
+<html lang="en-us">
+<head>
+	<title>Next train arriving...</title>
+	<style>
+		ul {
+			list-style: none;
+			margin: auto;
+		}
+		li {
+			font-size: 3em;
+			text-align: center;
+			padding-top: 5px;
+		}
+		div {
+			margin: auto;
+			text-align: center;
+			padding-top: 5px;
+		}
+		#container {
+			width: 90vw;
+		}
+	</style>
+</head>
+<body>
+	<div id=container>
+		<div id="header">
+			<h1>Trains Arriving at South Weymouth Station</h1>
+			<hr>
+		</div>
+		<div id="content">No current prediction.</div>
+		<div id="footer"></div>
+	</div>
+
+
+</body>
+<script type="text/javascript">
+function reqLoaded () {
+	let predictedArrivals = [];
+	let arrival_time;
+	let direction;
+	const obj = JSON.parse(this.responseText);
+	const dataList = obj.data;
+
+	for (var i=0; i<dataList.length; i++){
+		arrival_time = new Date(dataList[i].attributes.arrival_time).toLocaleTimeString();
+		direction = dataList[i].attributes.direction_id === 0? "outbound" : "inbound";
+
+		predictedArrivals.push({"arrival_time": arrival_time, "direction": direction});
+	}
+
+	const ul = document.createElement('ul');
+	let contentDiv = document.getElementById('content');
+	contentDiv.innerHTML = "";
+	contentDiv.appendChild(ul);
+
+	for (let i=0; i<predictedArrivals.length; i++){
+		const li = document.createElement('li');
+		ul.appendChild(li);
+		li.innerHTML = predictedArrivals[i].arrival_time + " (" + predictedArrivals[i].direction + ")";
+	}
+}
+
+function updatePrediction(){
+
+	const req = new XMLHttpRequest();
+	req.addEventListener('load', reqLoaded);
+	req.open("GET", "https://api-v3.mbta.com/predictions?filter[stop]=South%20Weymouth&sort=arrival_time");
+	req.send();
+}
+
+updatePrediction();
+
+</script>
+</html>
