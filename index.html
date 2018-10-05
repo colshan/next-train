@@ -1,13 +1,14 @@
 <html lang="en-us">
 <head>
-	<title>Next train arriving...</title>
+	<title>Next Train</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
 		ul {
 			list-style: none;
 			margin: auto;
 		}
 		li {
-			font-size: 3em;
+			font-size: 24px;
 			text-align: center;
 			padding-top: 5px;
 		}
@@ -16,16 +17,12 @@
 			text-align: center;
 			padding-top: 5px;
 		}
-		#container {
-			width: 90vw;
-		}
 	</style>
 </head>
 <body>
 	<div id=container>
 		<div id="header">
 			<h1>Trains Arriving at South Weymouth Station</h1>
-			<hr>
 		</div>
 		<div id="content">No current prediction.</div>
 		<div id="footer"></div>
@@ -42,7 +39,9 @@ function reqLoaded () {
 	const dataList = obj.data;
 
 	for (var i=0; i<dataList.length; i++){
-		arrival_time = new Date(dataList[i].attributes.arrival_time).toLocaleTimeString();
+		arrival_time = new Date(dataList[i].attributes.arrival_time);
+		arrival_time = arrival_time.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
 		direction = dataList[i].attributes.direction_id === 0? "outbound" : "inbound";
 
 		predictedArrivals.push({"arrival_time": arrival_time, "direction": direction});
@@ -56,7 +55,7 @@ function reqLoaded () {
 	for (let i=0; i<predictedArrivals.length; i++){
 		const li = document.createElement('li');
 		ul.appendChild(li);
-		li.innerHTML = predictedArrivals[i].arrival_time + " (" + predictedArrivals[i].direction + ")";
+		li.innerHTML = predictedArrivals[i].arrival_time + ' (' + predictedArrivals[i].direction + ")";
 	}
 }
 
