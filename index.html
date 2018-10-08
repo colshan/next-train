@@ -47,9 +47,13 @@ function reqLoaded () {
 		predictedArrivals.push({"arrival_time": arrival_time, "direction": direction});
 	}
 
-	const ul = document.createElement('ul');
+	if (predictedArrivals.length === 0) {
+		return;
+	}
+
 	let contentDiv = document.getElementById('content');
 	contentDiv.innerHTML = "";
+	const ul = document.createElement('ul');
 	contentDiv.appendChild(ul);
 
 	for (let i=0; i<predictedArrivals.length; i++){
